@@ -1,20 +1,29 @@
 # evaluation_server.py
 
 
-import socket
 import os
-import time
+import sys
+import socket
 import json
+import time
 import numpy as np
+import tensorflow as tf
 import matplotlib
 matplotlib.use('Agg')  # Встановлюємо агресивний режим для роботи в неосновному потоці
 import matplotlib.pyplot as plt
 import seaborn as sns
 from sklearn.metrics import mean_squared_error, mean_absolute_error, r2_score
+from datetime import datetime
 from util_functions import SignalPredictor, INPUT_SIZE, FEATURES, load_and_prepare_test_data
 import threading
 import queue
 import struct
+
+# Додаємо кореневу директорію проекту до PYTHONPATH
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
+from core_ml_components.signal_predictor import SignalPredictor
+from core_ml_components.util_functions import load_and_prepare_test_data
 
 # Створюємо чергу для зберігання метрик
 metrics_queue = queue.Queue()

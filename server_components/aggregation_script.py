@@ -1,22 +1,26 @@
 import os
+import sys
+import socket
+import json
+import argparse
 import numpy as np
 import tensorflow as tf
 import pickle
 import pandas as pd
-import socket
 import gc
 import time
 import matplotlib.pyplot as plt
 from sklearn.metrics import mean_squared_error, mean_absolute_error, r2_score
 import seaborn as sns
 import threading
-import argparse
-from util_functions import SignalPredictor, INPUT_SIZE, FEATURES, load_and_prepare_test_data
-import socket
-import json
-import os
+from datetime import datetime
 import struct
 
+# Додаємо кореневу директорію проекту до PYTHONPATH
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
+from core_ml_components.signal_predictor import SignalPredictor
+from core_ml_components.util_functions import load_and_prepare_test_data
 
 ALPHA = 0.1
 # Додаємо парсер аргументів командного рядка

@@ -15,6 +15,9 @@ import json
 import glob
 import re
 
+# Додаємо кореневу директорію проекту до PYTHONPATH
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
 def find_evaluation_server(broadcast_port=49152, timeout=5):
     """
     Пошук сервера оцінки в локальній мережі через broadcast.
@@ -405,7 +408,7 @@ class FederatedSystemGUI:
 
             reuse_info = []
             for i in range(1, num_clients + 1):
-                client_dir = f"federated_clients/client{i}/data"
+                client_dir = f"federated_client/client{i}/data"
                 data_files = sorted(glob.glob(os.path.join(client_dir, "data*.txt")))
                 total_files = len(data_files)
                 if total_files == 0:
@@ -581,8 +584,8 @@ class FederatedSystemGUI:
             self.metrics_text.config(state=tk.DISABLED)
 
             server_process = subprocess.Popen(
-                ["./aggregation_server_bchr/x64/Release/aggregation_server_bchr.exe", str(buffer_size)],
-                cwd="aggregation_server_bchr",
+                ["./server_components/x64/Release/aggregation_server_bchr.exe", str(buffer_size)],
+                cwd=os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "server_components"),
                 stdout=subprocess.PIPE,
                 stderr=subprocess.STDOUT,
                 text=True,
@@ -600,12 +603,12 @@ class FederatedSystemGUI:
             self.metrics_text.config(state=tk.DISABLED)
 
             aggregation_process = subprocess.Popen(
-                [sys.executable, "aggregation_module.py",
+                [sys.executable, "aggregation_script.py",
                  "--aggregation_type", self.aggregation_mode.get(),
                  "--buffer_size", str(buffer_size),
                  "--alpha", str(alpha),
-                 "--evaluation_server_ip", self.evaluation_server_ip],  # Додаємо IP сервера оцінки
-                cwd="aggregation_server_bchr",
+                 "--evaluation_server_ip", self.evaluation_server_ip],
+                cwd=os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "server_components"),
                 stdout=subprocess.PIPE,
                 stderr=subprocess.STDOUT,
                 text=True,
@@ -638,7 +641,7 @@ class FederatedSystemGUI:
                      "--data_dir", str(i),
                      "--rounds", str(rounds),
                      "--local_epochs", str(local_epochs)],
-                    cwd="federated_clients",
+                    cwd=os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "federated_client"),
                     stdout=subprocess.PIPE,
                     stderr=subprocess.STDOUT,
                     text=True,
@@ -811,12 +814,12 @@ class FederatedSystemGUI:
                 alpha = float(self.alpha_value.get())
 
                 new_agg_process = subprocess.Popen(
-                    [sys.executable, "aggregation_module.py",
+                    [sys.executable, "aggregation_script.py",
                      "--aggregation_type", self.aggregation_mode.get(),
                      "--buffer_size", str(buffer_size),
                      "--alpha", str(alpha),
                      "--evaluation_server_ip", self.evaluation_server_ip],
-                    cwd="aggregation_server_bchr",
+                    cwd=os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "server_components"),
                     stdout=subprocess.PIPE,
                     stderr=subprocess.STDOUT,
                     text=True,

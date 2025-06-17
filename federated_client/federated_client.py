@@ -1,11 +1,18 @@
-import socket
 import os
-import numpy as np
-import tensorflow as tf
-from util_functions import SignalPredictor, load_data, INPUT_SIZE, OUTPUT_SIZE, FEATURES
+import sys
+import socket
+import struct
 import time
-import glob
 import argparse
+import tensorflow as tf
+import numpy as np
+import glob
+
+# Додаємо кореневу директорію проекту до PYTHONPATH
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
+from core_ml_components.signal_predictor import SignalPredictor
+from core_ml_components.util_functions import load_data, apply_moving_average, INPUT_SIZE, OUTPUT_SIZE, FEATURES
 
 class FederatedClient:
     def __init__(self, server_host='localhost', server_port=2121, data_dir_num=1, max_rounds=10, local_epochs=5):
